@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using BethanysPieShop.Models;
 
 namespace BethanysPieShop
 {
@@ -21,6 +22,9 @@ namespace BethanysPieShop
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<IPieRepository, MockPieRepository>();
+            services.AddTransient<ICategoryRepository, MockCategoryRepository>();
+
             services.AddMvc();
         }
 
@@ -32,10 +36,6 @@ namespace BethanysPieShop
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
             }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-            }
 
             app.UseStaticFiles();
 
@@ -43,7 +43,7 @@ namespace BethanysPieShop
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Pie}/{action=List}/{id?}");
             });
         }
     }
