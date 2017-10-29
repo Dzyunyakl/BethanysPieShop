@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using BethanysPieShop.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BethanysPieShop
 {
@@ -22,8 +23,14 @@ namespace BethanysPieShop
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IPieRepository, MockPieRepository>();
-            services.AddTransient<ICategoryRepository, MockCategoryRepository>();
+            services.AddDbContext<AppDbContext>
+                (options => 
+                    options.UseSqlServer(Configuration
+                    .GetConnectionString("DefaultConnection"))
+                );
+
+            services.AddTransient<IPieRepository, PieRepository>();
+            services.AddTransient<ICategoryRepository, CategoryRepository>();
 
             services.AddMvc();
         }
